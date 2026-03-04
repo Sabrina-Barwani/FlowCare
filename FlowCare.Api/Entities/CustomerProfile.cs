@@ -8,7 +8,7 @@
         public string FullName { get; set; } = default!;
         public string? Phone { get; set; }
 
-        // ID Image (Required later)
+        // ID Image 
         public string? IdImagePath { get; set; }
         public string? IdImageContentType { get; set; }
         public long? IdImageSize { get; set; }

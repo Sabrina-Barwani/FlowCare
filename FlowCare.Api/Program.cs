@@ -65,6 +65,7 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddSingleton<IAuthorizationHandler, SameBranchHandler>();
 builder.Services.AddScoped<SlotService>();
 builder.Services.AddScoped<CustomerService>();
+builder.Services.AddScoped<IFileStorage, LocalFileStorage>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
