@@ -1,4 +1,5 @@
-﻿using FlowCare.Api.Data;
+﻿using FlowCare.Api.Auth;
+using FlowCare.Api.Data;
 using FlowCare.Api.Dtos;
 using FlowCare.Api.Entities;
 using FlowCare.Api.Services;
@@ -18,12 +19,14 @@ public class AuthController : ControllerBase
     private readonly AppDbContext _db;
     private readonly IPasswordHasher _hasher;
     private readonly IFileStorage _storage;
+    private readonly ICurrentUser _current;
 
-    public AuthController(AppDbContext db, IPasswordHasher hasher, IFileStorage storage)
+    public AuthController(AppDbContext db, IPasswordHasher hasher, IFileStorage storage, ICurrentUser current)
     {
         _db = db;
         _hasher = hasher;
         _storage = storage;
+        _current = current;
     }
 
    
@@ -87,5 +90,26 @@ public class AuthController : ControllerBase
             customer.FullName,
             customer.Phone
         });
+    }
+
+    [Authorize]
+    [HttpGet("me")]
+    public async Task<IActionResult> Me()
+    {
+        if (_current.UserId is null) return Unauthorized();
+
+        var user = await _db.Users.AsNoTracking()
+            .Where(u => u.Id == _current.UserId.Value)
+            .Select(u => new
+            {
+                u.Id,
+                u.Username,
+                u.Role,
+                u.BranchId,
+                u.IsActive
+            })
+            .FirstOrDefaultAsync();
+
+        return user is null ? Unauthorized() : Ok(user);
     }
 }
