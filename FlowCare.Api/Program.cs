@@ -1,9 +1,9 @@
-using FlowCare.Api.Data;
-using Microsoft.EntityFrameworkCore;
 using FlowCare.Api.Auth;
 using FlowCare.Api.Data;
+using static FlowCare.Api.Entities.Enums;
 using FlowCare.Api.Services;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,7 +48,23 @@ builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 builder.Services.AddAuthentication("Basic")
     .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("Basic", null);
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", p =>
+    p.RequireRole(UserRole.Admin.ToString()));
+
+    options.AddPolicy("ManagerOrAdmin", p =>
+        p.RequireRole(UserRole.Admin.ToString(), UserRole.BranchManager.ToString()));
+
+    options.AddPolicy("StaffOrAbove", p =>
+        p.RequireRole(UserRole.Admin.ToString(), UserRole.BranchManager.ToString(), UserRole.Staff.ToString()));
+
+    options.AddPolicy("CustomerOnly", p =>
+        p.RequireRole(UserRole.Customer.ToString()));
+});
+builder.Services.AddSingleton<IAuthorizationHandler, SameBranchHandler>();
+builder.Services.AddScoped<SlotService>();
+builder.Services.AddScoped<CustomerService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -64,5 +80,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-await DbSeeder.SeedDefaultAdminAsync(app.Services, app.Configuration);
+await DbSeeder.SeedAsync(app.Services, app.Configuration);
 app.Run();

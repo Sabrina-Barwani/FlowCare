@@ -15,10 +15,27 @@ namespace FlowCare.Api.Controllers
         private readonly AppDbContext _db;
         public BranchesController(AppDbContext db) => _db = db;
 
+
         // Returns all branches
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Get() =>
             Ok(await _db.Branches.AsNoTracking().ToListAsync());
+
+        // GET /api/branches/branchId/services
+        [AllowAnonymous]
+        [HttpGet("{branchId:int}/services")]
+        public async Task<IActionResult> GetServicesByBranch(int branchId)
+        {
+            var branchExists = await _db.Branches.AnyAsync(b => b.Id == branchId);
+            if (!branchExists) return NotFound("Branch not found.");
+
+            var services = await _db.ServiceTypes.AsNoTracking()
+                .Where(s => s.BranchId == branchId)
+                .ToListAsync();
+
+            return Ok(services);
+        }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] Branch branch)
@@ -27,5 +44,6 @@ namespace FlowCare.Api.Controllers
             await _db.SaveChangesAsync();   
             return Ok(branch);
         }
+
     }
 }

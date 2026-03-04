@@ -1,7 +1,9 @@
 ﻿namespace FlowCare.Api.Entities
 {
-    public class Enums
+  public static class Enums
     {
+
+
         public enum UserRole
         {
             Admin = 1,
@@ -33,4 +35,6 @@
             AppointmentStatusUpdated = 10
         }
     }
+
+
 }
