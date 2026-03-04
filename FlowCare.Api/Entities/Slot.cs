@@ -1,5 +1,6 @@
 ﻿namespace FlowCare.Api.Entities
 {
+    // Each slot can only be booked once
     public class Slot
     {
         public int Id { get; set; }

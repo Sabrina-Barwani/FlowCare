@@ -5,7 +5,7 @@ namespace FlowCare.Api.Data
     public class AppDbContext : DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
+         // tables
         public DbSet<Branch> Branches => Set<Branch>();
         public DbSet<ServiceType> ServiceTypes => Set<ServiceType>();
         public DbSet<User> Users => Set<User>();
