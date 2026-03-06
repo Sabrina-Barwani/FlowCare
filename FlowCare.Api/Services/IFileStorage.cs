@@ -10,4 +10,9 @@ public interface IFileStorage
     Task<(Stream stream, string contentType)> OpenReadAsync(
         string relativePath,
         CancellationToken ct = default);
+
+    Task<(string relativePath, string contentType, long size)> SaveAppointmentAttachmentAsync(
+    int appointmentId,
+    IFormFile file,
+    CancellationToken ct = default);
 }

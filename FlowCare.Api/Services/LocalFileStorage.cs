@@ -48,4 +48,27 @@ public class LocalFileStorage : IFileStorage
         Stream stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read);
         return Task.FromResult((stream, contentType));
     }
+
+    public async Task<(string relativePath, string contentType, long size)> SaveAppointmentAttachmentAsync(
+    int appointmentId,
+    IFormFile file,
+    CancellationToken ct = default)
+    {
+        var root = Path.Combine(_env.ContentRootPath, "storage", "appointment-attachments", appointmentId.ToString());
+        Directory.CreateDirectory(root);
+
+        var ext = Path.GetExtension(file.FileName);
+        if (string.IsNullOrWhiteSpace(ext)) ext = ".bin";
+
+        var fileName = $"{Guid.NewGuid():N}{ext}";
+        var fullPath = Path.Combine(root, fileName);
+
+        await using var fs = new FileStream(fullPath, FileMode.CreateNew, FileAccess.Write, FileShare.None);
+        await file.CopyToAsync(fs, ct);
+
+        var relativePath = Path.Combine("storage", "appointment-attachments", appointmentId.ToString(), fileName)
+            .Replace("\\", "/");
+
+        return (relativePath, file.ContentType, file.Length);
+    }
 }
