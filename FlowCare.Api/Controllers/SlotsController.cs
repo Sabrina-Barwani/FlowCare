@@ -3,6 +3,7 @@ using FlowCare.Api.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static FlowCare.Api.Entities.Enums;
 
 namespace FlowCare.Api.Controllers;
 
@@ -36,7 +37,7 @@ public class SlotsController : ControllerBase
                 s.BranchId == branchId &&
                 s.ServiceTypeId == serviceTypeId &&
                 s.DeletedAtUtc == null &&     // not deleted
-                s.Appointment == null &&      // not booked
+                s.Appointment == null || s.Appointment.Status == AppointmentStatus.Cancelled &&      // not booked
                 s.StartTimeUtc > now          // future only
             );
 

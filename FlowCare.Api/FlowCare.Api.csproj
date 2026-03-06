@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Dtos\RescheduleAppointmentRequest.cs\**" />
+    <Content Remove="Dtos\RescheduleAppointmentRequest.cs\**" />
+    <EmbeddedResource Remove="Dtos\RescheduleAppointmentRequest.cs\**" />
+    <None Remove="Dtos\RescheduleAppointmentRequest.cs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
