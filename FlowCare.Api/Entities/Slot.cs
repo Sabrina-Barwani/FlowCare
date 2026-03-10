@@ -8,7 +8,7 @@
         public int BranchId { get; set; }
         public int ServiceTypeId { get; set; }
 
-        // optional staff-specific slot
+        // staff specific slot
         public int? StaffProfileId { get; set; }
 
         public DateTime StartTimeUtc { get; set; }
