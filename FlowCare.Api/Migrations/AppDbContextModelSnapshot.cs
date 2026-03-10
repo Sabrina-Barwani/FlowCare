@@ -73,6 +73,9 @@ namespace FlowCare.Api.Migrations
                     b.Property<int>("CustomerProfileId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("text");
+
                     b.Property<int>("SlotId")
                         .HasColumnType("integer");
 

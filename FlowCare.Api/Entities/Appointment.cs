@@ -25,5 +25,7 @@ namespace FlowCare.Api.Entities
         public Slot Slot { get; set; } = default!;
         public CustomerProfile CustomerProfile { get; set; } = default!;
         public StaffProfile? AssignedStaffProfile { get; set; }
+
+        public string? Notes { get; set; }
     }
 }

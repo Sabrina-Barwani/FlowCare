@@ -253,6 +253,23 @@ public static class DbSeeder
         }
 
         await db.SaveChangesAsync();
+        // Assign some slots to staff for testing Day 10
+        var staff = await db.StaffProfiles.FirstOrDefaultAsync();
+
+        if (staff != null)
+        {
+            var slotsWithoutStaff = await db.Slots
+                .Where(s => s.StaffProfileId == null)
+                .Take(5)
+                .ToListAsync();
+
+            foreach (var slot in slotsWithoutStaff)
+            {
+                slot.StaffProfileId = staff.Id;
+            }
+
+            await db.SaveChangesAsync();
+        }
     }
 
 }
