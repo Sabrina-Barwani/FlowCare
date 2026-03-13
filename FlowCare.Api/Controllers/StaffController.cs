@@ -200,5 +200,123 @@ namespace FlowCare.Api.Controllers
                 appointment.Notes
             });
         }
+
+        [Authorize]
+        [HttpGet("/api/staff")]
+        public async Task<IActionResult> GetStaff(CancellationToken ct)
+        {
+            if (_current.UserId is null) return Unauthorized();
+
+            IQueryable<StaffProfile> query = _db.StaffProfiles.AsNoTracking()
+                .Include(s => s.User);
+
+            if (_current.Role == UserRole.Admin)
+            {
+                // all staff
+            }
+            else if (_current.Role == UserRole.BranchManager)
+            {
+                query = query.Where(s => s.User.BranchId == _current.BranchId);
+            }
+            else
+            {
+                return Forbid();
+            }
+
+            var result = await query
+                .OrderBy(s => s.Id)
+                .Select(s => new
+                {
+                    s.Id,
+                    s.UserId,
+                    Username = s.User.Username,
+                    s.FullName,
+                    BranchId = s.User.BranchId
+                })
+                .ToListAsync(ct);
+
+            return Ok(result);
+        }
+
+        [Authorize]
+        [HttpPost("/api/staff/{staffId:int}/assign-services")]
+        public async Task<IActionResult> AssignServices(
+    int staffId,
+    [FromBody] AssignStaffServicesRequest request,
+    CancellationToken ct)
+        {
+            if (_current.UserId is null) return Unauthorized();
+
+            var staff = await _db.StaffProfiles
+                .Include(s => s.User)
+                .FirstOrDefaultAsync(s => s.Id == staffId, ct);
+
+            if (staff is null)
+                return NotFound("Staff not found.");
+
+            // Authorization
+            if (_current.Role == UserRole.Admin)
+            {
+                // allowed
+            }
+            else if (_current.Role == UserRole.BranchManager)
+            {
+                if (staff.User.BranchId != _current.BranchId)
+                    return Forbid();
+            }
+            else
+            {
+                return Forbid();
+            }
+
+            var validServiceIds = await _db.ServiceTypes
+                .Where(s => request.ServiceTypeIds.Contains(s.Id) && s.BranchId == staff.User.BranchId)
+                .Select(s => s.Id)
+                .ToListAsync(ct);
+
+            if (validServiceIds.Count != request.ServiceTypeIds.Count)
+                return BadRequest("One or more service types are invalid for this staff branch.");
+
+            // Remove old assignments
+            var oldAssignments = await _db.StaffServiceTypes
+                .Where(x => x.StaffProfileId == staffId)
+                .ToListAsync(ct);
+
+            _db.StaffServiceTypes.RemoveRange(oldAssignments);
+
+            // Add new assignments
+            var newAssignments = validServiceIds.Select(serviceId => new StaffServiceType
+            {
+                StaffProfileId = staffId,
+                ServiceTypeId = serviceId
+            }).ToList();
+
+            _db.StaffServiceTypes.AddRange(newAssignments);
+
+            _db.AuditLogs.Add(new AuditLog
+            {
+                ActionType = AuditActionType.StaffServiceAssignmentChanged,
+                ActorUserId = _current.UserId.Value,
+                ActorRole = _current.Role!.Value,
+                BranchId = staff.User.BranchId,
+                TargetEntityType = "StaffProfile",
+                TargetEntityId = staffId.ToString(),
+                MetadataJson = JsonSerializer.Serialize(new
+                {
+                    staffId,
+                    serviceTypeIds = validServiceIds
+                })
+            });
+
+            await _db.SaveChangesAsync(ct);
+
+            return Ok(new
+            {
+                message = "Staff services assigned successfully.",
+                staffId,
+                serviceTypeIds = validServiceIds
+            });
+        }
+
     }
 }

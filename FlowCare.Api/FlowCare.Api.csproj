@@ -7,10 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Dtos\AssignStaffServicesRequest.cs\**" />
     <Compile Remove="Dtos\RescheduleAppointmentRequest.cs\**" />
+    <Content Remove="Dtos\AssignStaffServicesRequest.cs\**" />
     <Content Remove="Dtos\RescheduleAppointmentRequest.cs\**" />
+    <EmbeddedResource Remove="Dtos\AssignStaffServicesRequest.cs\**" />
     <EmbeddedResource Remove="Dtos\RescheduleAppointmentRequest.cs\**" />
+    <None Remove="Dtos\AssignStaffServicesRequest.cs\**" />
     <None Remove="Dtos\RescheduleAppointmentRequest.cs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Controllers\nu1hdwwi.n4b~" />
   </ItemGroup>
 
   <ItemGroup>

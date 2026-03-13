@@ -139,7 +139,7 @@ public class SlotsController : ControllerBase
 
         return Ok(slot);
     }
-
+    // create slot
     [Authorize]
     [HttpPost("/api/branches/{branchId:int}/slots/bulk")]
     public async Task<IActionResult> BulkCreateSlots(
