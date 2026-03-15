@@ -44,8 +44,9 @@ public class MeController : ControllerBase
                 Status = a.Status.ToString(),
 
                 SlotId = a.SlotId,
-                StartTimeUtc = a.Slot.StartTimeUtc,
-                EndTimeUtc = a.Slot.EndTimeUtc,
+           
+                StartTimeUtc = a.Slot != null ? a.Slot.StartTimeUtc : null,
+                EndTimeUtc = a.Slot != null ? a.Slot.EndTimeUtc : null,
 
                 BranchId = a.Slot.BranchId,
                 BranchName = a.Slot.Branch.Name,
@@ -80,8 +81,9 @@ public class MeController : ControllerBase
                 Status = a.Status.ToString(),
 
                 SlotId = a.SlotId,
-                StartTimeUtc = a.Slot.StartTimeUtc,
-                EndTimeUtc = a.Slot.EndTimeUtc,
+  
+                StartTimeUtc = a.Slot != null ? a.Slot.StartTimeUtc : null,
+                EndTimeUtc = a.Slot != null ? a.Slot.EndTimeUtc : null,
 
                 BranchId = a.Slot.BranchId,
                 BranchName = a.Slot.Branch.Name,

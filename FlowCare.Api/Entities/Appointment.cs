@@ -6,7 +6,7 @@ namespace FlowCare.Api.Entities
     {
         public int Id { get; set; }
 
-        public int SlotId { get; set; }
+        public int? SlotId { get; set; }
         public int CustomerProfileId { get; set; }
 
         // assigned staff snapshot (from slot)
@@ -22,7 +22,7 @@ namespace FlowCare.Api.Entities
         public string? AttachmentContentType { get; set; }
         public long? AttachmentSize { get; set; }
 
-        public Slot Slot { get; set; } = default!;
+        public Slot? Slot { get; set; } = default!;
         public CustomerProfile CustomerProfile { get; set; } = default!;
         public StaffProfile? AssignedStaffProfile { get; set; }
 
