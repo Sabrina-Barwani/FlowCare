@@ -8,6 +8,19 @@ FlowCare is a RESTful API built with ASP.NET Core and PostgreSQL to manage branc
 - Git
 - GitHub
 ---
+## Features
+- Role-based authorization (Admin, Branch Manager, Staff, Customer)
+- Soft delete + hard delete cleanup
+- Audit logging system
+- Pagination & Search for listing APIs
+- Queue position calculation per branch
+- CSV export for audit logs
+---
+##  Deliverables
+- GitHub Repository: [FlowCare API](https://github.com/Sabrina-Barwani/FlowCare)
+- Database Schema (ERD):
+![ERD](ERD.png)
+
 ## Setup Instructions
 ### 1. Install requirements
 You need:
