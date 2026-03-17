@@ -45,7 +45,13 @@ Run this command in package manager console:
 ## add-migration "createDbTables"
 This will create the migration 
 ⸻
-5. Run the project
+5. Migration Scripts
+Database schema is managed using Entity Framework Core migrations.
+Run in package manager console:
+##update-database
+to apply migrations.
+⸻
+6. Run the project
 Run:
 run the project F5
 Swagger will open at:
@@ -95,12 +101,7 @@ PUT /api/admin/settings/slot-retention-days
 Cleanup endpoint removes expired slots:
 POST /api/admin/slots/cleanup
 Cleanup is idempotent and safe.
-⸻
-Migration Scripts
-Database schema is managed using Entity Framework Core migrations.
-Run in package manager console:
-##update-database
-to apply migrations.
+
 ⸻
 Author
 Sabrina Al Barwani
