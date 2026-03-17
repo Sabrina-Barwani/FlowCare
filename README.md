@@ -56,10 +56,10 @@ Seeded data includes:
 Seeding is idempotent, meaning it will not duplicate data if run multiple times.
 ⸻
 Example API Usage
-Get available slots
-GET /api/slots/available?branchId=1&serviceTypeId=1
+Search Customers
+GET /api/Customers?term={searchTerm}&page={pageNumber}&size={pageSize}
 Example curl:
-curl https://localhost:7151/api/slots/available?branchId=1&serviceTypeId=1
+curl https://localhost:7151/api/Customers?term=99999999&page=1&size=10
 
 ⸻
 Create appointment
