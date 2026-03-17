@@ -33,7 +33,7 @@ Example:
 CREATE DATABASE flowcare_db;
 
 ⸻
-3. Configure connection string
+### 3. Configure connection string
 Update the connection string in appsettings.json:
 "ConnectionStrings": {
   "DefaultConnection": "Host=localhost;Port=5432;Database=flowcare_db;Username=postgres;Password=postgres"
